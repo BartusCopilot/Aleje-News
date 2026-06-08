@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Aleje News</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="visuals">
+        <img src="visuals/aleje.jpg" id="mainImage">
+    </div>
+    <div id="textContent">
+        <h1 id="mainTitle"> Nowosci w BCU ! </h1>
+        <h2 id="subtitle"> Dyrektor ogłasza nowe plany dla BCU</h2>
+        <h2 id="hours"> 12:00 </h2>
+    </div>
+    <img src="visuals/logo.jpg" id="logo">
+    <div id="countdown" aria-hidden="true">
+        <svg class="countdown-ring" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+            <circle class="ring-bg" cx="50" cy="50" r="45" fill="none" stroke-width="8" />
+            <circle class="ring" cx="50" cy="50" r="45" fill="none" stroke-width="8" stroke-linecap="round" transform="rotate(-90 50 50)" />
+        </svg>
+        <div class="countdown-text">
+            <div id="countdown-number">0</div>
+        </div>
+    </div>
+    <script>
+        let lastId = 0;
+        let hideTimer = null;
+        let nextTimer = null;
+
+        function showNewsElements() {
+            document.getElementById('textContent').style.display = '';
+        }
+
+        let countdownInterval = null;
+        let countdownRemaining = 0;
+        let countdownTotal = 0;
+        const ring = document.querySelector('#countdown .ring');
+        const numberEl = document.getElementById('countdown-number');
+        const RADIUS = 45;
+        const CIRC = 2 * Math.PI * RADIUS;
+
+        if (ring) {
+            ring.style.strokeDasharray = CIRC;
+            ring.style.strokeDashoffset = CIRC;
+        }
+
+        function startCountdown(totalSeconds) {
+            stopCountdown();
+            if (!ring) return;
+            countdownTotal = Math.max(1, Math.floor(totalSeconds));
+            countdownRemaining = countdownTotal;
+            updateCountdownDisplay();
+            countdownInterval = setInterval(() => {
+                countdownRemaining -= 1;
+                if (countdownRemaining < 0) {
+                    stopCountdown();
+                    return;
+                }
+                updateCountdownDisplay();
+            }, 1000);
+        }
+
+        function stopCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+        }
+
+        function updateCountdownDisplay() {
+            if (!ring) return;
+            const pct = countdownTotal > 0 ? (countdownRemaining / countdownTotal) : 0;
+            const offset = CIRC * (1 - pct);
+            ring.style.strokeDashoffset = offset;
+            numberEl.textContent = Math.max(0, countdownRemaining).toString();
+        }
+
+        function updateClock() {
+            const el = document.getElementById('hours');
+            if (!el) return;
+            const now = new Date();
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            el.textContent = hh + ':' + mm;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        function hideNewsElements() {
+            document.getElementById('textContent').style.display = 'none';
+            stopCountdown();
+        }
+
+        function updateNews(data) {
+            document.getElementById("mainImage").src = "visuals/" + data.image;
+            document.getElementById("mainTitle").textContent = data.title;
+            document.getElementById('subtitle').textContent = data.subtitle;
+            showNewsElements();
+
+            if (hideTimer) clearTimeout(hideTimer);
+            if (nextTimer) clearTimeout(nextTimer);
+
+            const duration = Math.max(1, parseInt(data.time) || 5);
+            startCountdown(duration);
+
+            hideTimer = setTimeout(() => {
+                hideNewsElements();
+            }, duration * 1000);
+
+            nextTimer = setTimeout(() => {
+                loadNews();
+            }, duration * 1000);
+        }
+
+        async function loadNews() {
+            try {
+                let response = await fetch(`getNews.php?after=${lastId}`);
+                let data = await response.json();
+                if (data) {
+                    lastId = data.id;
+                    updateNews(data);
+                } else {
+                    if (nextTimer) clearTimeout(nextTimer);
+                    nextTimer = setTimeout(loadNews, 5000);
+                }
+            } catch (e) {
+                if (nextTimer) clearTimeout(nextTimer);
+                nextTimer = setTimeout(loadNews, 5000);
+            }
+        }
+
+        hideNewsElements();
+        loadNews();
+    </script>
+</body>
+</html>
