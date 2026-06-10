@@ -8,6 +8,10 @@
 <body>
     <div id="visuals">
         <img src="visuals/aleje.jpg" id="mainImage">
+        <video id="mainVideo" autoplay playsinline preload="auto" style="display:none" width="100%" height="100%">
+            <source src="visuals/domanskiDance.mp4" type="video/mp4">
+            Twoja przegladarka nie wspiera elementu vidoe
+        </video>
     </div>
     <div id="textContent">
         <h1 id="mainTitle"> Nowosci w BCU ! </h1>
@@ -44,6 +48,13 @@
         if (ring) {
             ring.style.strokeDasharray = CIRC;
             ring.style.strokeDashoffset = CIRC;
+        }
+
+        const mainVideo = document.getElementById('mainVideo');
+        if (mainVideo) {
+            mainVideo.addEventListener('error', () => console.log('video error object:', mainVideo.error));
+            mainVideo.addEventListener('canplay', () => console.log('video canplay, readyState=', mainVideo.readyState));
+            mainVideo.addEventListener('loadeddata', () => console.log('video loadeddata'));
         }
 
         function startCountdown(totalSeconds) {
@@ -91,10 +102,40 @@
         function hideNewsElements() {
             document.getElementById('textContent').style.display = 'none';
             stopCountdown();
+            const mv = document.getElementById('mainVideo');
+            if (mv) {
+                try { mv.pause(); mv.currentTime = 0; mv.style.display = 'none'; } catch(e) { console.log('hide video error', e); }
+            }
         }
 
         function updateNews(data) {
-            document.getElementById("mainImage").src = "visuals/" + data.image;
+            let zdjecie = document.getElementById("mainImage");
+            let wideo = document.getElementById("mainVideo");
+            console.log('updateNews', data);
+            if (data.rodzaj == "zdjecie") {
+                wideo.style.display = "none";
+                zdjecie.style.display = "block";
+                zdjecie.src = 'visuals/' + data.file;
+            } else if (data.rodzaj == "wideo") {
+                zdjecie.style.display = "none";
+                if (!wideo) { console.log('no video element'); }
+                else {
+                    let file = data.file || '';
+                    if (file && file.indexOf('/') === -1 && !file.match(/^(https?:)?\/\//)) file = 'visuals/' + file;
+                    let src = wideo.querySelector('source');
+                    if (!src) { src = document.createElement('source'); wideo.appendChild(src); }
+                    src.src = file;
+                    src.type = 'video/mp4';
+                    wideo.load();
+                    wideo.muted = true;
+                    wideo.volume = 1;
+                    wideo.style.display = 'block';
+                    wideo.style.objectPosition = 'center center';
+                    wideo.play();
+                }
+            } else {
+                console.log("Nieobslugiwany format pliku")
+            }
             document.getElementById("mainTitle").textContent = data.title;
             document.getElementById('subtitle').textContent = data.subtitle;
             showNewsElements();

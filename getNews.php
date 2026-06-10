@@ -10,7 +10,7 @@ if (!$conn) {
 
 $after = isset($_GET['after']) ? (int)$_GET['after'] : 0;
 
-$sql = "SELECT id, zdjecie, tytul, opis, czas_trwania
+$sql = "SELECT id, plik, tytul, opis, czas_trwania, rodzaj
         FROM news
         WHERE id > $after
         ORDER BY id ASC
@@ -26,7 +26,7 @@ if (!$result) {
 $row = mysqli_fetch_assoc($result);
 
 if (!$row) {
-    $fallback = mysqli_query($conn, "SELECT id, zdjecie, tytul, opis, czas_trwania FROM news ORDER BY id ASC LIMIT 1");
+    $fallback = mysqli_query($conn, "SELECT id, plik, tytul, opis, czas_trwania, rodzaj FROM news ORDER BY id ASC LIMIT 1");
     $row = mysqli_fetch_assoc($fallback);
 }
 
@@ -37,10 +37,11 @@ if (!$row) {
 
 echo json_encode([
     'id' => (int)$row['id'],
-    'image' => $row['zdjecie'],
+    'file' => $row['plik'],
     'title' => $row['tytul'],
     'subtitle' => $row['opis'],
     'time' => $row['czas_trwania'],
+    'rodzaj' => $row['rodzaj'],
 ]);
 
 ?>
