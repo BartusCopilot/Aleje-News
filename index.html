@@ -4,8 +4,87 @@
     <meta charset="UTF-8">
     <title>Aleje News</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        #mainTitle {
+            grid-area: headline;
+            margin: 0;
+            padding: 0.8rem 1rem;
+            font-size: clamp(1.7rem, 3vw, 3.2rem);
+            line-height: 1.05;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: linear-gradient(90deg, #14532d 0%, #16a34a 45%, #4ade80 100%);
+            border-left: 8px solid #fff;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        #mainTitle .scroll-wrapper {
+            display: inline-flex;
+            animation: scrollText 20s linear infinite;
+            animation-play-state: paused;
+        }
+
+        #mainTitle.scroll-active .scroll-wrapper {
+            animation-play-state: running;
+        }
+
+        #mainTitle .scroll-text {
+            display: inline-block;
+            padding-right: 80px;
+            white-space: nowrap;
+        }
+
+        /* Pasek dolny - subtitle z przewijaniem */
+        #subtitle {
+            grid-area: details;
+            align-self: start;
+            margin: 0;
+            font-size: clamp(1rem, 1.6vw, 1.6rem);
+            line-height: 1.25;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        #subtitle .scroll-wrapper {
+            display: inline-flex;
+            animation: scrollText 30s linear infinite;
+            animation-play-state: paused;
+        }
+
+        #subtitle.scroll-active .scroll-wrapper {
+            animation-play-state: running;
+        }
+
+        #subtitle .scroll-text {
+            display: inline-block;
+            padding-right: 60px;
+            white-space: nowrap;
+        }
+    </style>
 </head>
 <body>
+    <!-- WIDGET POGODY - NAD blokiem nagłówkowym -->
+    <div id="weatherWidget" class="hidden">
+        <div class="weather-icon" id="weatherIcon">🌡️</div>
+        <div class="weather-info">
+            <div class="weather-temp" id="weatherTemp">--°C</div>
+            <div class="weather-desc" id="weatherDesc">Ładowanie...</div>
+        </div>
+    </div>
+
     <div id="visuals">
         <img src="visuals/aleje.jpg" id="mainImage">
         <video id="mainVideo" autoplay playsinline preload="auto" style="display:none" width="100%" height="100%">
@@ -14,9 +93,17 @@
         </video>
     </div>
     <div id="textContent">
-        <h1 id="mainTitle"> Nowosci w BCU ! </h1>
-        <h2 id="subtitle"> Dyrektor ogłasza nowe plany dla BCU</h2>
-        <h2 id="hours"> 12:00 </h2>
+        <h1 id="mainTitle">
+            <span class="scroll-wrapper">
+                <span class="scroll-text">Nowosci w BCU !</span>
+            </span>
+        </h1>
+        <h2 id="subtitle">
+            <span class="scroll-wrapper">
+                <span class="scroll-text">Dyrektor ogłasza nowe plany dla BCU</span>
+            </span>
+        </h2>
+        <h2 id="hours">12:00</h2>
     </div>
     <img src="visuals/logo.jpg" id="logo">
     <div id="countdown" aria-hidden="true">
@@ -28,10 +115,24 @@
             <div id="countdown-number">0</div>
         </div>
     </div>
+
     <script>
         let lastId = 0;
         let hideTimer = null;
         let nextTimer = null;
+        let currentPogoda = null;
+
+        function updateWeatherWidget(pogoda) {
+            const widget = document.getElementById('weatherWidget');
+            if (!pogoda) {
+                widget.classList.add('hidden');
+                return;
+            }
+            widget.classList.remove('hidden');
+            document.getElementById('weatherIcon').textContent = pogoda.ikona;
+            document.getElementById('weatherTemp').textContent = pogoda.temperatura + '°C';
+            document.getElementById('weatherDesc').textContent = pogoda.opis;
+        }
 
         function showNewsElements() {
             document.getElementById('textContent').style.display = '';
@@ -108,10 +209,53 @@
             }
         }
 
+        // Uniwersalna funkcja sprawdzająca przewijanie dla dowolnego elementu
+        function checkScroll(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            const wrapper = element.querySelector('.scroll-wrapper');
+            if (!wrapper) return;
+            
+            const textSpan = wrapper.querySelector('.scroll-text');
+            if (!textSpan) return;
+            
+            const containerWidth = element.clientWidth;
+            const textWidth = textSpan.offsetWidth;
+            
+            // Usuń poprzednie klony
+            const existingClones = wrapper.querySelectorAll('.scroll-text.clone');
+            existingClones.forEach(c => c.remove());
+            
+            if (textWidth > containerWidth) {
+                const clone = textSpan.cloneNode(true);
+                clone.classList.add('clone');
+                wrapper.appendChild(clone);
+                element.classList.add('scroll-active');
+            } else {
+                element.classList.remove('scroll-active');
+            }
+        }
+
+        function checkTitleScroll() {
+            checkScroll('mainTitle');
+        }
+
+        function checkSubtitleScroll() {
+            checkScroll('subtitle');
+        }
+
         function updateNews(data) {
             let zdjecie = document.getElementById("mainImage");
             let wideo = document.getElementById("mainVideo");
             console.log('updateNews', data);
+            
+            // POKAŻ POGODĘ NAJPIERW
+            if (data.pogoda) {
+                currentPogoda = data.pogoda;
+                updateWeatherWidget(data.pogoda);
+            }
+            
             if (data.rodzaj == "zdjecie") {
                 wideo.style.display = "none";
                 zdjecie.style.display = "block";
@@ -136,9 +280,28 @@
             } else {
                 console.log("Nieobslugiwany format pliku")
             }
-            document.getElementById("mainTitle").textContent = data.title;
-            document.getElementById('subtitle').textContent = data.subtitle;
+            
+            // Aktualizuj nagłówek
+            const title = document.getElementById("mainTitle");
+            const titleSpan = title.querySelector('.scroll-text');
+            if (titleSpan) {
+                titleSpan.textContent = data.title;
+            }
+            
+            // Aktualizuj subtitle
+            const subtitle = document.getElementById("subtitle");
+            const subtitleSpan = subtitle.querySelector('.scroll-text');
+            if (subtitleSpan) {
+                subtitleSpan.textContent = data.subtitle;
+            }
+            
             showNewsElements();
+
+            // Sprawdź przewijanie dla obu elementów
+            requestAnimationFrame(() => {
+                checkTitleScroll();
+                checkSubtitleScroll();
+            });
 
             if (hideTimer) clearTimeout(hideTimer);
             if (nextTimer) clearTimeout(nextTimer);
@@ -155,11 +318,40 @@
             }, duration * 1000);
         }
 
+        function positionWeather() {
+            const textContent = document.getElementById('textContent');
+            const weather = document.getElementById('weatherWidget');
+            if (!textContent || !weather) return;
+            const rect = textContent.getBoundingClientRect();
+            weather.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+        }
+
+        positionWeather();
+
+        window.addEventListener('resize', () => {
+            positionWeather();
+            checkTitleScroll();
+            checkSubtitleScroll();
+        });
+
+        async function loadWeatherFirst() {
+            try {
+                let response = await fetch('getNews.php?after=0');
+                let data = await response.json();
+                if (data && data.pogoda) {
+                    currentPogoda = data.pogoda;
+                    updateWeatherWidget(data.pogoda);
+                }
+            } catch (e) {
+                console.log('pogoda init error', e);
+            }
+        }
+
         async function loadNews() {
             try {
                 let response = await fetch(`getNews.php?after=${lastId}`);
                 let data = await response.json();
-                if (data) {
+                if (data && !data.error) {
                     lastId = data.id;
                     updateNews(data);
                 } else {
@@ -172,7 +364,22 @@
             }
         }
 
+        setInterval(() => {
+            if (currentPogoda) {
+                fetch('getNews.php?after=' + lastId)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.pogoda) {
+                            currentPogoda = data.pogoda;
+                            updateWeatherWidget(data.pogoda);
+                        }
+                    })
+                    .catch(() => {});
+            }
+        }, 300000);
+
         hideNewsElements();
+        loadWeatherFirst();
         loadNews();
     </script>
 </body>
