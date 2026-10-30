@@ -1,43 +1,41 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-$conn = mysqli_connect('localhost', 'root', '', 'alejenews');
+$connection = mysqli_connect('localhost', 'root', '', 'alejenews');
 
-if (!$conn) {
+if (!$connection) {
     echo json_encode(['error' => 'Brak polaczenia z baza']);
     exit;
 }
 
-// ========== POBIERANIE POGODY NA ŻYWO - ŁUKÓW ==========
-function pobierzPogode() {
-    // Współrzędne Łuków
+function fetchWeather() {
     $lat = 51.9294;
     $lon = 22.3843;
     
     $url = "https://api.open-meteo.com/v1/forecast?latitude={$lat}&longitude={$lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m,pressure_msl,is_day&timezone=auto";
     
-    $ch = curl_init();
-    curl_setopt_array($ch, [
+    $curlHandle = curl_init();
+    curl_setopt_array($curlHandle, [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT => 5,
         CURLOPT_FOLLOWLOCATION => true,
     ]);
     
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    $response = curl_exec($curlHandle);
+    $httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+    curl_close($curlHandle);
     
     if ($httpCode !== 200 || !$response) {
         return null;
     }
     
-    $data = json_decode($response, true);
-    return $data['current'] ?? null;
+    $weatherData = json_decode($response, true);
+    return $weatherData['current'] ?? null;
 }
 
-function opisPogody($kod) {
-    $mapa = [
+function describeWeather($code) {
+    $weatherDescriptions = [
         0 => ['Bezchmurnie', '☀️'],
         1 => ['Przeważnie bezchmurnie', '🌤️'],
         2 => ['Częściowe zachmurzenie', '⛅'],
@@ -63,45 +61,44 @@ function opisPogody($kod) {
         96 => ['Burza z gradem', '⛈️'],
         99 => ['Silna burza z gradem', '⛈️'],
     ];
-    return $mapa[$kod] ?? ['Nieznane', '❓'];
+    return $weatherDescriptions[$code] ?? ['Nieznane', '❓'];
 }
 
-function kierunekWiatru($stopnie) {
-    $kierunki = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
-    $index = round($stopnie / 22.5) % 16;
-    return $kierunki[$index];
+function getWindDirection($degrees) {
+    $directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+    $directionIndex = round($degrees / 22.5) % 16;
+    return $directions[$directionIndex];
 }
 
-// Pobierz pogodę
-$pogoda = pobierzPogode();
-$pogodaData = null;
+$weather = fetchWeather();
+$weatherData = null;
 
-if ($pogoda) {
-    [$opis, $ikona] = opisPogody($pogoda['weather_code']);
-    $pogodaData = [
-        'temperatura' => round($pogoda['temperature_2m']),
-        'odczuwalna' => round($pogoda['apparent_temperature']),
-        'opis' => $opis,
-        'ikona' => $ikona,
-        'wilgotnosc' => $pogoda['relative_humidity_2m'],
-        'wiatr' => round($pogoda['wind_speed_10m']),
-        'kierunek_wiatru' => kierunekWiatru($pogoda['wind_direction_10m']),
-        'cisnienie' => round($pogoda['pressure_msl']),
-        'noc' => $pogoda['is_day'] === 0,
-        'czas' => $pogoda['time']
+if ($weather) {
+    [$description, $icon] = describeWeather($weather['weather_code']);
+    $weatherData = [
+        'temperature' => round($weather['temperature_2m']),
+        'feelsLike' => round($weather['apparent_temperature']),
+        'description' => $description,
+        'icon' => $icon,
+        'humidity' => $weather['relative_humidity_2m'],
+        'wind' => round($weather['wind_speed_10m']),
+        'windDirection' => getWindDirection($weather['wind_direction_10m']),
+        'pressure' => round($weather['pressure_msl']),
+        'isNight' => $weather['is_day'] === 0,
+        'time' => $weather['time']
     ];
 }
 
-// ========== POBIERANIE NEWSÓW Z BAZY ==========
 $after = isset($_GET['after']) ? (int)$_GET['after'] : 0;
 
-$sql = "SELECT id, plik, tytul, opis, czas_trwania, rodzaj
+$sql = "SELECT id, plik AS file_name, tytul AS title, opis AS description,
+               czas_trwania AS duration, rodzaj AS content_type
         FROM news
         WHERE id > $after
         ORDER BY id ASC
         LIMIT 1";
 
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($connection, $sql);
 
 if (!$result) {
     echo json_encode(['error' => 'Blad zapytania']);
@@ -111,7 +108,9 @@ if (!$result) {
 $row = mysqli_fetch_assoc($result);
 
 if (!$row) {
-    $fallback = mysqli_query($conn, "SELECT id, plik, tytul, opis, czas_trwania, rodzaj FROM news ORDER BY id ASC LIMIT 1");
+    $fallback = mysqli_query($connection, "SELECT id, plik AS file_name, tytul AS title, opis AS description,
+                                                  czas_trwania AS duration, rodzaj AS content_type
+                                           FROM news ORDER BY id ASC LIMIT 1");
     $row = mysqli_fetch_assoc($fallback);
 }
 
@@ -120,20 +119,20 @@ if (!$row) {
         'id' => 0,
         'file' => 'visuals/aleje.jpg',
         'title' => 'Pogoda na żywo',
-        'subtitle' => $pogodaData ? "{$pogodaData['ikona']} {$pogodaData['temperatura']}°C, {$pogodaData['opis']}" : 'Brak danych pogodowych',
+        'subtitle' => $weatherData ? "{$weatherData['icon']} {$weatherData['temperature']}°C, {$weatherData['description']}" : 'Brak danych pogodowych',
         'time' => 10,
-        'rodzaj' => 'zdjecie',
-        'pogoda' => $pogodaData
+        'type' => 'image',
+        'weather' => $weatherData
     ]);
     exit;
 }
 
 echo json_encode([
     'id' => (int)$row['id'],
-    'file' => $row['plik'],
-    'title' => $row['tytul'],
-    'subtitle' => $row['opis'],
-    'time' => $row['czas_trwania'],
-    'rodzaj' => $row['rodzaj'],
-    'pogoda' => $pogodaData
+    'file' => $row['file_name'],
+    'title' => $row['title'],
+    'subtitle' => $row['description'],
+    'time' => $row['duration'],
+    'type' => $row['content_type'] === 'zdjecie' ? 'image' : ($row['content_type'] === 'wideo' ? 'video' : $row['content_type']),
+    'weather' => $weatherData
 ]);

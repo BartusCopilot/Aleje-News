@@ -1,0 +1,301 @@
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	font-family: Arial, Helvetica, sans-serif;
+	background: #000;
+}
+
+body {
+	position: relative;
+}
+
+#visuals {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
+#mainVideo,
+#mainImage {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center center;
+	display: block;
+}
+
+#mainVideo {
+	display: none;
+	background: #000;
+}
+
+#mainImage {
+	display: none;
+}
+
+#textContent,
+#logo,
+.countdown-text {
+	position: relative;
+	z-index: 1;
+}
+
+#textContent {
+	position: fixed;
+	left: clamp(10rem, 15vw, 17rem);
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	grid-template-areas:
+		"headline headline"
+		"details clock";
+	gap: 0.75rem 1.5rem;
+	padding: 1rem 1.25rem 1.1rem 0;
+	color: #fff;
+	background: none;
+	backdrop-filter: none;
+	box-shadow: none;
+}
+
+#mainTitle,
+#subtitle {
+	min-width: 0;
+	margin: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	position: relative;
+}
+
+#mainTitle {
+	grid-area: headline;
+	padding: 0.8rem 1rem;
+	font-size: clamp(1.7rem, 3vw, 3.2rem);
+	line-height: 1.05;
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	background: #16803c;
+	border-left: 8px solid #fff;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+}
+
+#subtitle {
+	grid-area: details;
+	align-self: start;
+	font-size: clamp(1rem, 1.6vw, 1.6rem);
+	line-height: 1.25;
+	font-weight: 700;
+	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+#hours {
+	grid-area: clock;
+	align-self: start;
+	justify-self: end;
+	margin: 0;
+	min-width: 5.5rem;
+	padding: 0.35rem 0.7rem;
+	font-size: clamp(1.2rem, 2vw, 2rem);
+	line-height: 1.25;
+	font-weight: 800;
+	text-align: center;
+	background: #16803c;
+	border: 1px solid #fff;
+	border-radius: 999px;
+	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes scrollText {
+	0% {
+		transform: translateX(0);
+	}
+
+	100% {
+		transform: translateX(-50%);
+	}
+}
+
+#mainTitle .scroll-wrapper,
+#subtitle .scroll-wrapper {
+	display: inline-flex;
+	width: max-content;
+	min-width: 100%;
+	animation-name: scrollText;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: paused;
+}
+
+#mainTitle .scroll-wrapper {
+	animation-duration: 20s;
+}
+
+#subtitle .scroll-wrapper {
+	animation-duration: 30s;
+}
+
+#mainTitle.scroll-active .scroll-wrapper,
+#subtitle.scroll-active .scroll-wrapper {
+	animation-play-state: running;
+}
+
+#mainTitle .scroll-text,
+#subtitle .scroll-text {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+#mainTitle .scroll-text {
+	padding-right: 80px;
+}
+
+#subtitle .scroll-text {
+	padding-right: 60px;
+}
+
+#countdown {
+	position: fixed;
+	top: 1%;
+	right: 1%;
+	z-index: 4;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 8vmin;
+	height: 8vmin;
+	pointer-events: none;
+	font-size: 200%;
+	background: #173b28;
+	border: 1px solid #fff;
+	border-radius: 50%;
+}
+
+.countdown-ring {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+#countdown .ring-bg {
+	stroke: #356047;
+}
+
+#countdown .ring {
+	stroke: #24b330;
+	transition: stroke-dashoffset 0.3s linear;
+}
+
+.countdown-text {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	color: #28be34;
+	font-weight: 800;
+	text-align: center;
+}
+
+#countdown-number {
+	font-size: 60%;
+	line-height: 1;
+}
+
+.countdown-label {
+	margin-top: 2%;
+	font-size: 30%;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+#logo {
+	position: fixed;
+	left: 1.25rem;
+	bottom: 1.1rem;
+	z-index: 6;
+	display: block;
+	width: clamp(7rem, 12vw, 13rem);
+	height: auto;
+	padding: 0.75rem;
+	background: #f4f1e8;
+	border: 0.45rem solid #16803c;
+	border-radius: 1rem;
+	box-shadow: none;
+	transition: transform 0.12s ease;
+}
+
+#weatherWidget {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 120px;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	color: #fff;
+	font-family: Arial, Helvetica, sans-serif;
+	background: #173b28;
+	border: 1px solid #fff;
+	border-radius: 12px;
+	backdrop-filter: none;
+	transition: opacity 0.3s;
+}
+
+#weatherWidget.hidden {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.weather-icon {
+	font-size: clamp(1.2rem, 2vw, 1.8rem);
+	line-height: 1;
+	filter: none;
+}
+
+.weather-info {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.05;
+}
+
+.weather-temp {
+	font-size: clamp(1rem, 1.5vw, 1.4rem);
+	font-weight: 800;
+	letter-spacing: -0.5px;
+}
+
+.weather-desc {
+	font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+	font-weight: 600;
+	opacity: 1;
+}
+
+@media (max-width: 700px) {
+	#textContent {
+		left: 0;
+		padding-left: 1rem;
+	}
+
+	#logo {
+		top: 1rem;
+		bottom: auto;
+		left: 1rem;
+		width: 6rem;
+	}
+}
