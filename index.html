@@ -20,6 +20,15 @@
             <source src="visuals/domanskiDance.mp4" type="video/mp4">
             Twoja przegladarka nie wspiera elementu vidoe
         </video>
+        <div id="question" style="display:none">
+            <h1 id="questionText">Tresc Pytania</h1>
+            <div id="answers">
+                <p id="answerA" class="answer">A. Odpowiedz</p>
+                <p id="answerB" class="answer">B. Odpowiedz</p>
+                <p id="answerC" class="answer">C. Odpowiedz</p>
+                <p id="answerD" class="answer">D. Odpowiedz</p>
+            </div>
+        </div>
     </div>
     <div id="textContent">
         <h1 id="mainTitle">
@@ -49,7 +58,6 @@
         let lastId = 0;
         let hideTimer = null;
         let nextTimer = null;
-        let currentWeather = null;
 
         function updateWeatherWidget(weather) {
             const widget = document.getElementById('weatherWidget');
@@ -172,47 +180,72 @@
         }
 
         function updateNews(data) {
-            let zdjecie = document.getElementById("mainImage");
-            let wideo = document.getElementById("mainVideo");
+            let image = document.getElementById("mainImage");
+            let video = document.getElementById("mainVideo");
+            let question = document.getElementById("question");
+            let textContent = document.getElementById("textContent");
+            const title = document.getElementById("mainTitle");
+            const subtitle = document.getElementById("subtitle");
+            let logo = document.getElementById("logo");
             console.log('updateNews', data);
             
-            if (data.weather) {
-                currentWeather = data.weather;
-                updateWeatherWidget(data.weather);
-            }
-            
-            if (data.type == "image") {
-                wideo.style.display = "none";
-                zdjecie.style.display = "block";
-                zdjecie.src = 'visuals/' + data.file;
-            } else if (data.type == "video") {
-                zdjecie.style.display = "none";
-                if (!wideo) { console.log('no video element'); }
+            if (data.type == "zdjecie") {
+                title.style.display = "block";
+                subtitle.style.display = "block";
+                video.style.display = "none";
+                question.style.display = "none";
+                image.style.display = "block";
+                image.src = 'visuals/' + data.file;
+            } else if (data.type == "wideo") {
+                title.style.display = "block";
+                subtitle.style.display = "block";
+                image.style.display = "none";
+                question.style.display = "none";
+                if (!video) { console.log('no video element'); }
                 else {
                     let file = data.file || '';
                     if (file && file.indexOf('/') === -1 && !file.match(/^(https?:)?\/\//)) file = 'visuals/' + file;
-                    let src = wideo.querySelector('source');
-                    if (!src) { src = document.createElement('source'); wideo.appendChild(src); }
+                    let src = video.querySelector('source');
+                    if (!src) { src = document.createElement('source'); video.appendChild(src); }
                     src.src = file;
                     src.type = 'video/mp4';
-                    wideo.load();
-                    wideo.muted = true;
-                    wideo.volume = 1;
-                    wideo.style.display = 'block';
-                    wideo.style.objectPosition = 'center center';
-                    wideo.play();
+                    video.load();
+                    video.muted = true;
+                    video.volume = 1;
+                    video.style.display = 'block';
+                    video.style.objectPosition = 'center center';
+                    video.play();
                 }
+            } else if (data.type == "pytanie_testowe") {
+                video.style.display = "none";
+                image.style.display = "none";
+                title.style.display = "none";
+                subtitle.style.display = "none";
+                question.style.display = "block";
+                let questionText = document.getElementById("questionText");
+                if (questionText) {
+                    questionText.textContent = data.question || '';
+                }
+                let options = ['A', 'B', 'C', 'D'];
+                for (let option of options) {
+                    let optionElement = document.getElementById("answer" + option);
+                    if (optionElement) {
+                        optionElement.classList.remove('correctAnswer', 'wrongAnswer');
+                        optionElement.classList.add('answer');
+                        let answerText = data.options && data.options[option] || '';
+                        optionElement.textContent = option + ". " + answerText;
+                    }
+                }
+
             } else {
                 console.log("Nieobslugiwany format pliku")
             }
             
-            const title = document.getElementById("mainTitle");
             const titleSpan = title.querySelector('.scroll-text');
             if (titleSpan) {
                 titleSpan.textContent = data.title;
             }
             
-            const subtitle = document.getElementById("subtitle");
             const subtitleSpan = subtitle.querySelector('.scroll-text');
             if (subtitleSpan) {
                 subtitleSpan.textContent = data.subtitle;
@@ -231,13 +264,36 @@
             const duration = Math.max(1, parseInt(data.time) || 5);
             startCountdown(duration);
 
-            hideTimer = setTimeout(() => {
-                hideNewsElements();
-            }, duration * 1000);
+            if (data.type == "pytanie_testowe") {
+                hideTimer = setTimeout(() => {
+                    const correctAnswer = String(data.correctAnswer || '').trim().toUpperCase();
+                    const options = ['A', 'B', 'C', 'D'];
 
-            nextTimer = setTimeout(() => {
-                loadNews();
-            }, duration * 1000);
+                    for (let option of options) {
+                        const optionElement = document.getElementById("answer" + option);
+                        if (!optionElement) continue;
+                        optionElement.classList.remove('answer');
+                        if (option === correctAnswer)
+                            optionElement.classList.add('correctAnswer');
+                        else
+                            optionElement.classList.add('wrongAnswer');
+                    }
+
+                    startCountdown(5);
+                    nextTimer = setTimeout(() => {
+                        hideNewsElements();
+                        loadNews();
+                    }, 5000);
+                }, duration * 1000);
+            } else {
+                hideTimer = setTimeout(() => {
+                    hideNewsElements();
+                }, duration * 1000);
+
+                nextTimer = setTimeout(() => {
+                    loadNews();
+                }, duration * 1000);
+            }
         }
 
         function positionWeather() {
@@ -258,11 +314,12 @@
 
         async function loadWeatherFirst() {
             try {
-                let response = await fetch('getNews.php?after=0');
+                let response = await fetch('getWeather.php', { cache: 'no-store' });
                 let data = await response.json();
-                if (data && data.weather) {
-                    currentWeather = data.weather;
-                    updateWeatherWidget(data.weather);
+                if (data && !data.error) {
+                    updateWeatherWidget(data);
+                } else {
+                    updateWeatherWidget(null);
                 }
             } catch (e) {
                 console.log('pogoda init error', e);
@@ -286,19 +343,7 @@
             }
         }
 
-        setInterval(() => {
-            if (currentWeather) {
-                fetch('getNews.php?after=' + lastId)
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.weather) {
-                            currentWeather = data.weather;
-                            updateWeatherWidget(data.weather);
-                        }
-                    })
-                    .catch(() => {});
-            }
-        }, 300000);
+        setInterval(loadWeatherFirst, 300000);
 
         hideNewsElements();
         loadWeatherFirst();

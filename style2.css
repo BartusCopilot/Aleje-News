@@ -45,6 +45,55 @@ body {
 	display: none;
 }
 
+#question {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	display: none;
+	padding: 8vh 8vw 20vh;
+	color: #fff;
+	text-align: center;
+	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
+}
+
+#questionText {
+	margin: 0 auto 2rem;
+	max-width: 90%;
+	font-size: clamp(2rem, 5vw, 5rem);
+}
+
+#answers {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem 2rem;
+	max-width: 80rem;
+	margin: 0 auto;
+}
+
+#answers p {
+	margin: 0;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	font-size: clamp(1.25rem, 2.5vw, 2.5rem);
+	font-weight: 700;
+}
+
+.answer {
+	color: #fff;
+	background: rgba(22, 128, 60, 0.9);
+	border: 2px solid #fff;
+}
+
+.correctAnswer {
+	background: #16803c;
+	border:none;
+}
+
+.wrongAnswer {
+	background: #a00;
+	border:none;
+}
+
 #textContent,
 #logo,
 .countdown-text {
