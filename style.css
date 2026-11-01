@@ -1,292 +1,356 @@
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body {
-	margin: 0;
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	font-family: Arial, Helvetica, sans-serif;
-	background: #000;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #000;
 }
 
 body {
-	position: relative;
+    position: relative;
 }
 
 #visuals {
-	position: fixed;
-	inset: 0;
-	z-index: 0;
-	width: 100vw;
-	height: 100vh;
-	overflow: hidden;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 #mainVideo,
 #mainImage {
-	position: absolute;
-	inset: 0;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	object-position: center center;
-	display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
 }
 
 #mainVideo {
-	display: none;
-	background: #000;
+    display: none;
+    background: #000;
 }
 
 #mainImage {
-	display: none;
+    display: none;
 }
+
+/* === Sekcja Pytań Testowych (styl1) === */
+
+#question {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: none;
+    padding: 8vh 8vw 20vh;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
+}
+
+#questionText {
+    margin: 0 auto 2.5rem;
+    max-width: 90%;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+#answers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    max-width: 80rem;
+    margin: 0 auto;
+}
+
+#answers p {
+    margin: 0;
+    padding: 1.2rem 1.5rem;
+    border-radius: 0.75rem;
+    font-size: clamp(1.25rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.answer {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.correctAnswer {
+    color: #fff;
+    background: linear-gradient(135deg, #15803d 0%, #22c55e 100%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+}
+
+.wrongAnswer {
+    color: #fff;
+    background: linear-gradient(135deg, #991b1b 0%, #ef4444 100%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
+}
+
+/* ===================================== */
 
 #textContent,
 #logo,
 .countdown-text {
-	position: relative;
-	z-index: 1;
+    position: relative;
+    z-index: 1;
 }
 
 #textContent {
-	position: fixed;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 2;
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto;
-	grid-template-areas:
-		"headline headline"
-		"details clock";
-	gap: 0.75rem 1.5rem;
-	padding: 1rem 1.25rem 1.1rem;
-	color: #fff;
-	background: linear-gradient(
-		180deg,
-		rgba(0, 0, 0, 0) 0%,
-		rgba(7, 14, 25, 0.8) 18%,
-		rgba(0, 0, 0, 0.95) 100%
-	);
-	backdrop-filter: blur(2px);
-	box-shadow: 0 -14px 30px rgba(0, 0, 0, 0.35);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "headline headline"
+        "details clock";
+    gap: 0.75rem 1.5rem;
+    padding: 1rem 1.25rem 1.1rem;
+    color: #fff;
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(7, 14, 25, 0.8) 18%,
+        rgba(0, 0, 0, 0.95) 100%
+    );
+    backdrop-filter: blur(2px);
+    box-shadow: 0 -14px 30px rgba(0, 0, 0, 0.35);
 }
 
 #mainTitle,
 #subtitle {
-	min-width: 0;
-	margin: 0;
-	overflow: hidden;
-	white-space: nowrap;
-	position: relative;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
 }
 
 #mainTitle {
-	grid-area: headline;
-	padding: 0.8rem 1rem;
-	font-size: clamp(1.7rem, 3vw, 3.2rem);
-	line-height: 1.05;
-	font-weight: 800;
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
-	background: linear-gradient(90deg, #14532d 0%, #16a34a 45%, #4ade80 100%);
-	border-left: 8px solid #fff;
-	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    grid-area: headline;
+    padding: 0.8rem 1rem;
+    font-size: clamp(1.7rem, 3vw, 3.2rem);
+    line-height: 1.05;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: linear-gradient(90deg, #14532d 0%, #16a34a 45%, #4ade80 100%);
+    border-left: 8px solid #fff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
 #subtitle {
-	grid-area: details;
-	align-self: start;
-	font-size: clamp(1rem, 1.6vw, 1.6rem);
-	line-height: 1.25;
-	font-weight: 700;
-	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    grid-area: details;
+    align-self: start;
+    font-size: clamp(1rem, 1.6vw, 1.6rem);
+    line-height: 1.25;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
 #hours {
-	grid-area: clock;
-	align-self: start;
-	justify-self: end;
-	margin: 0;
-	min-width: 5.5rem;
-	padding: 0.35rem 0.7rem;
-	font-size: clamp(1.2rem, 2vw, 2rem);
-	line-height: 1.25;
-	font-weight: 800;
-	text-align: center;
-	background: rgba(255, 255, 255, 0.1);
-	border: 1px solid rgba(255, 255, 255, 0.18);
-	border-radius: 999px;
-	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    grid-area: clock;
+    align-self: start;
+    justify-self: end;
+    margin: 0;
+    min-width: 5.5rem;
+    padding: 0.35rem 0.7rem;
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    line-height: 1.25;
+    font-weight: 800;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
 @keyframes scrollText {
-	0% {
-		transform: translateX(0);
-	}
+    0% {
+        transform: translateX(0);
+    }
 
-	100% {
-		transform: translateX(-50%);
-	}
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 #mainTitle .scroll-wrapper,
 #subtitle .scroll-wrapper {
-	display: inline-flex;
-	width: max-content;
-	min-width: 100%;
-	animation-name: scrollText;
-	animation-timing-function: linear;
-	animation-iteration-count: infinite;
-	animation-play-state: paused;
+    display: inline-flex;
+    width: max-content;
+    min-width: 100%;
+    animation-name: scrollText;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-play-state: paused;
 }
 
 #mainTitle .scroll-wrapper {
-	animation-duration: 20s;
+    animation-duration: 20s;
 }
 
 #subtitle .scroll-wrapper {
-	animation-duration: 30s;
+    animation-duration: 30s;
 }
 
 #mainTitle.scroll-active .scroll-wrapper,
 #subtitle.scroll-active .scroll-wrapper {
-	animation-play-state: running;
+    animation-play-state: running;
 }
 
 #mainTitle .scroll-text,
 #subtitle .scroll-text {
-	display: inline-block;
-	white-space: nowrap;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 #mainTitle .scroll-text {
-	padding-right: 80px;
+    padding-right: 80px;
 }
 
 #subtitle .scroll-text {
-	padding-right: 60px;
+    padding-right: 60px;
 }
 
 #countdown {
-	position: fixed;
-	top: 1%;
-	right: 1%;
-	z-index: 4;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 8vmin;
-	height: 8vmin;
-	pointer-events: none;
-	font-size: 200%;
-	background: rgba(0, 0, 0, 0.5);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	border-radius: 50%;
-	backdrop-filter: blur(4px);
+    position: fixed;
+    top: 1%;
+    right: 1%;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8vmin;
+    height: 8vmin;
+    pointer-events: none;
+    font-size: 200%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    backdrop-filter: blur(4px);
 }
 
 .countdown-ring {
-	position: absolute;
-	width: 100%;
-	height: 100%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 #countdown .ring-bg {
-	stroke: rgba(255, 255, 255, 0.05);
+    stroke: rgba(255, 255, 255, 0.05);
 }
 
 #countdown .ring {
-	stroke: #24b330;
-	transition: stroke-dashoffset 0.3s linear;
+    stroke: #24b330;
+    transition: stroke-dashoffset 0.3s linear;
 }
 
 .countdown-text {
-	position: absolute;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	height: 100%;
-	color: #28be34;
-	font-weight: 800;
-	text-align: center;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #28be34;
+    font-weight: 800;
+    text-align: center;
 }
 
 #countdown-number {
-	font-size: 60%;
-	line-height: 1;
+    font-size: 60%;
+    line-height: 1;
 }
 
 .countdown-label {
-	margin-top: 2%;
-	font-size: 30%;
-	text-transform: uppercase;
-	letter-spacing: 0.06em;
+    margin-top: 2%;
+    font-size: 30%;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 #logo {
-	position: fixed;
-	top: 1%;
-	left: 1%;
-	z-index: 6;
-	display: block;
-	width: 5%;
-	height: auto;
-	padding: 0.6%;
-	background: rgba(255, 255, 255, 0.03);
-	border-radius: 8%;
-	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-	transition: transform 0.12s ease, box-shadow 0.12s ease;
+    position: fixed;
+    top: 1%;
+    left: 1%;
+    z-index: 6;
+    display: block;
+    width: 5%;
+    height: auto;
+    padding: 0.6%;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8%;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
 #weatherWidget {
-	position: fixed;
-	right: 1.25rem;
-	bottom: 120px;
-	z-index: 10;
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.5rem 1rem;
-	color: #fff;
-	font-family: Arial, Helvetica, sans-serif;
-	background: rgba(0, 0, 0, 0.65);
-	border: 1px solid rgba(255, 255, 255, 0.12);
-	border-radius: 12px;
-	backdrop-filter: blur(4px);
-	transition: opacity 0.3s;
+    position: fixed;
+    right: 1.25rem;
+    bottom: 120px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s;
 }
 
 #weatherWidget.hidden {
-	opacity: 0;
-	pointer-events: none;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .weather-icon {
-	font-size: clamp(1.2rem, 2vw, 1.8rem);
-	line-height: 1;
-	filter: drop-shadow(0 0 2px rgba(255, 200, 0, 0.4));
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    line-height: 1;
+    filter: drop-shadow(0 0 2px rgba(255, 200, 0, 0.4));
 }
 
 .weather-info {
-	display: flex;
-	flex-direction: column;
-	line-height: 1.05;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
 }
 
 .weather-temp {
-	font-size: clamp(1rem, 1.5vw, 1.4rem);
-	font-weight: 800;
-	letter-spacing: -0.5px;
+    font-size: clamp(1rem, 1.5vw, 1.4rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 .weather-desc {
-	font-size: clamp(0.6rem, 0.9vw, 0.75rem);
-	font-weight: 600;
-	opacity: 0.9;
+    font-size: clamp(0.6rem, 0.9vw, 0.75rem);
+    font-weight: 600;
+    opacity: 0.9;
 }

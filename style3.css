@@ -1,0 +1,410 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #010c06;
+    color: #e6fdf0;
+}
+
+body {
+    position: relative;
+}
+
+/* === Tło i wideo === */
+
+#visuals {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#mainVideo,
+#mainImage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+}
+
+#mainVideo {
+    display: none;
+    background: #010c06;
+}
+
+#mainImage {
+    display: none;
+}
+
+/* === Logo (Góra lewa, naturalne proporcje) === */
+
+#logo {
+    position: fixed;
+    top: 1.25rem;
+    left: 1.25rem;
+    z-index: 10;
+    display: block;
+    width: clamp(5.5rem, 8vw, 8.5rem);
+    height: auto;
+    object-fit: contain;
+    padding: 0.5rem 0.75rem;
+    background: rgba(2, 32, 19, 0.85);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+}
+
+/* === Odliczanie / Countdown (Góra prawa) === */
+
+#countdown {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 7.5vmin;
+    height: 7.5vmin;
+    min-width: 60px;
+    min-height: 60px;
+    pointer-events: none;
+    font-size: 200%;
+    background: #021a10;
+    border: 2px solid #10b981;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+.countdown-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#countdown .ring-bg {
+    stroke: rgba(255, 255, 255, 0.08);
+}
+
+#countdown .ring {
+    stroke: #34d399;
+    transition: stroke-dashoffset 0.3s linear;
+}
+
+.countdown-text {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #34d399;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+#countdown-number {
+    font-size: 55%;
+    line-height: 1;
+}
+
+.countdown-label {
+    margin-top: 2%;
+    font-size: 24%;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #a7f3d0;
+}
+
+/* === Panel Informacyjny — pełna szerokość na dole === */
+
+#textContent,
+.countdown-text {
+    position: relative;
+    z-index: 1;
+}
+
+#textContent {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+        "headline clock"
+        "details clock";
+    gap: 0;
+    padding: 0;
+    background: #04140b;
+    border-top: 3px solid #10b981;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.7);
+}
+
+#mainTitle,
+#subtitle {
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+}
+
+#mainTitle {
+    grid-area: headline;
+    padding: 0.55rem 1.4rem;
+    font-size: clamp(1.3rem, 2.2vw, 2.3rem);
+    line-height: 1.15;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    background: #061e12;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#subtitle {
+    grid-area: details;
+    padding: 0.45rem 1.4rem;
+    font-size: clamp(0.95rem, 1.35vw, 1.3rem);
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #a7f3d0;
+    background: #03140a;
+}
+
+/* === Zegar === */
+
+#hours {
+    grid-area: clock;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    min-width: 6.8rem;
+    padding: 0 1.4rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.2rem, 1.8vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-align: center;
+    color: #010c06;
+    background: #10b981;
+    border-left: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+/* === Przewijanie tekstu === */
+
+@keyframes scrollText {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+#mainTitle .scroll-wrapper,
+#subtitle .scroll-wrapper {
+    display: inline-flex;
+    width: max-content;
+    min-width: 100%;
+    animation-name: scrollText;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-play-state: paused;
+}
+
+#mainTitle .scroll-wrapper {
+    animation-duration: 18s;
+}
+
+#subtitle .scroll-wrapper {
+    animation-duration: 25s;
+}
+
+#mainTitle.scroll-active .scroll-wrapper,
+#subtitle.scroll-active .scroll-wrapper {
+    animation-play-state: running;
+}
+
+#mainTitle .scroll-text,
+#subtitle .scroll-text {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+#mainTitle .scroll-text {
+    padding-right: 70px;
+}
+
+#subtitle .scroll-text {
+    padding-right: 50px;
+}
+
+/* === Widżet pogody === */
+
+#weatherWidget {
+    position: fixed;
+    right: 0;
+    bottom: 5.4rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 1rem;
+    color: #fff;
+    background: #022013;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 2px solid #10b981;
+    box-shadow: -4px 0 14px rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s;
+}
+
+#weatherWidget.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.weather-icon {
+    font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+    line-height: 1;
+}
+
+.weather-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.weather-temp {
+    font-size: clamp(1rem, 1.4vw, 1.3rem);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: #34d399;
+}
+
+.weather-desc {
+    font-size: clamp(0.6rem, 0.8vw, 0.72rem);
+    font-weight: 700;
+    color: #a7f3d0;
+    text-transform: uppercase;
+}
+
+/* === Sekcja pytań / Quiz === */
+
+#question {
+    position: fixed;
+    inset: 0;
+    z-index: 6;
+    display: none;
+    padding: 8vh 6vw 18vh;
+    color: #fff;
+    text-align: center;
+    background: rgba(1, 12, 6, 0.88);
+}
+
+#questionText {
+    margin: 0 auto 2.5rem;
+    max-width: 85%;
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.18;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: #f0fdf4;
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.9);
+}
+
+#answers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+    max-width: 80rem;
+    margin: 0 auto;
+}
+
+#answers p {
+    margin: 0;
+    padding: 1.15rem 1.4rem;
+    border-radius: 4px;
+    font-size: clamp(1.15rem, 2.1vw, 1.9rem);
+    font-weight: 700;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    transition: background 0.15s ease;
+}
+
+.answer {
+    color: #ffffff;
+    background: #052616;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 8px solid #10b981;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.correctAnswer {
+    color: #010c06;
+    background: #10b981;
+    border: 1px solid #34d399;
+    border-left: 8px solid #ffffff;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+}
+
+.wrongAnswer {
+    color: #ffffff;
+    background: #b91c1c;
+    border: 1px solid #f87171;
+    border-left: 8px solid #ffffff;
+    box-shadow: 0 0 25px rgba(185, 28, 28, 0.6);
+}
+
+/* === RWD === */
+
+@media (max-width: 768px) {
+    #logo {
+        top: 0.75rem;
+        left: 0.75rem;
+        width: 4.5rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    #countdown {
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+
+    #weatherWidget {
+        top: 0.75rem;
+        bottom: auto;
+        right: 4.8rem;
+        border-left: none;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+    }
+
+    #answers {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
