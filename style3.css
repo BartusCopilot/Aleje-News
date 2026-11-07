@@ -151,7 +151,7 @@ body {
     color: #F3F7FA;
     background: rgba(10, 37, 64, 0.94);
     border: 1px solid rgba(85, 184, 232, 0.45);
-    border-right: clamp(4px, 0.4vw, 8px) solid #55B8E8;
+    border-right: 0.4vw  solid #55B8E8;
     border-radius: clamp(8px, 0.8vw, 14px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(14px);

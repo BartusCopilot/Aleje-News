@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="adminPanelStyle.css">
+    <title>Admin Panel</title>
+</head>
+<body>
+    <div id="menuGlowne">
+        <h1>Panel admina Aleje news</h1>
+        <button onclick="zmienWidok('dodajNewsa')">Dodaj newsa</button>
+        <button onclick="zmienWidok('baza')"> Wyswietl baze </button>
+    </div>
+    <div id="dodajNewsa">
+        <div id="formularz">
+            <h1>Dodaj newsa</h1>
+            <p>Rodzaj: </p>
+            <select name="rodzaj" id="rodzaj">
+                <option value="zdjecie">Zdjecie</option>
+                <option value="wideo">Wideo</option>
+                <option value="pytanie_testowe">Pytanie testowe</option>
+            </select><br>
+            <div type="media">
+                <label for="tytul">Tytuł newsa:</label>
+                <input type="text" id="tytul" name="tytul"><br>
+                <label for="plik">Plik:</label>
+                <input type="file" id="plik" name="plik"><br>
+                <label for="opis">Opis:</label>
+                <input type="text" id="opis" name="opis"><br>
+                <label for="czasTrwania">Czas trwania (w sekundach):</label>
+                <input type="number" id="czasTrwania" name="czasTrwania"><br>
+                <button onclick="dodajNewsa()">Dodaj newsa</button>
+            </div>
+            <div type="pytanie_testowe" style="display: none;">
+                <label for="czasTrwania">Czas trwania (w sekundach):</label>
+                <input type="number" id="czasTrwania" name="czasTrwania"><br>
+                <label for="trescPytania">Tresc pytania: </label>
+                <input type="text" id="trescPytania" name="trescPytania"><br>
+                <label for="odpA">Odpowiedz A: </label>
+                <input type="text" id="odpA" name="odpA"><br>
+                <label for="odpB">Odpowiedz B: </label>
+                <input type="text" id="odpB" name="odpB"><br>
+                <label for="odpC">Odpowiedz C: </label>
+                <input type="text" id="odpC" name="odpC"><br>
+                <label for="odpD">Odpowiedz D: </label>
+                <input type="text" id="odpD" name="odpD"><br>
+                <label for="poprawnaOdp">Poprawna odpowiedz: </label>
+                <select name="poprawnaOdp" id="poprawnaOdp">
+                    <option value="odpA">Odpowiedz A</option>
+                    <option value="odpB">Odpowiedz B</option>
+                    <option value="odpC">Odpowiedz C</option>
+                    <option value="odpD">Odpowiedz D</option>
+                </select><br>
+                <button onclick="dodajNewsa()">Dodaj newsa</button>
+            </div>
+        </div>
+        <div id="podglad">
+            <iframe src="index.html?preview=true"></iframe>
+            <button id="trybPytan" type="button" onclick="przelaczTrybPytan()">Zmień tryb pytań</button>
+        </div>
+    </div>
+    <div id="baza" style="display: none;">
+        <h1>Baza newsów</h1>
+        <div id="tabelaBaza">
+
+        </div>
+    </div>
+    <script>
+        const previewFrame = document.querySelector('#podglad iframe');
+        const trybPytan = document.getElementById('trybPytan');
+        let previewVideoUrl = null;
+        let pokazujOdpowiedz = false;
+
+        function zmienWidok(widok) {
+            document.getElementById('dodajNewsa').style.display = widok === 'dodajNewsa' ? '' : 'none';
+            document.getElementById('baza').style.display = widok === 'baza' ? '' : 'none';
+        }
+
+        function updateFormFields() {
+            const type = document.getElementById('rodzaj').value;
+            document.querySelectorAll('#formularz > div[type]').forEach((section) => {
+                const sectionType = section.getAttribute('type');
+                const isMedia = sectionType === 'media' && (type === 'zdjecie' || type === 'wideo');
+                section.style.display = isMedia || sectionType === type ? '' : 'none';
+            });
+
+            document.getElementById('plik').accept = type === 'wideo' ? 'video/*' : 'image/*';
+        }
+
+        function updatePreview() {
+            if (!previewFrame.contentDocument) return;
+
+            const preview = previewFrame.contentDocument;
+            const type = document.getElementById('rodzaj').value;
+            trybPytan.style.display = type === 'pytanie_testowe' ? 'inline-flex' : 'none';
+            const form = (type === 'zdjecie' || type === 'wideo')
+                ? document.querySelector('[type="media"]')
+                : document.querySelector('[type="' + type + '"]');
+            const title = form ? form.querySelector('[name="tytul"]') : null;
+            const description = form ? form.querySelector('[name="opis"]') : null;
+            const mainTitle = preview.getElementById('mainTitle');
+            const subtitle = preview.getElementById('subtitle');
+            const question = preview.getElementById('question');
+            const image = preview.getElementById('mainImage');
+            const video = preview.getElementById('mainVideo');
+
+            if (mainTitle) mainTitle.style.display = type === 'pytanie_testowe' ? 'none' : 'block';
+            if (subtitle) subtitle.style.display = type === 'pytanie_testowe' ? 'none' : 'block';
+
+            if (mainTitle && title) {
+                mainTitle.querySelector('.scroll-text').textContent = title.value || 'Tytul newsa';
+            }
+            if (subtitle && description) {
+                subtitle.querySelector('.scroll-text').textContent = description.value || 'Opis newsa';
+            }
+
+            if (type === 'pytanie_testowe') {
+                if (image) image.style.display = 'none';
+                if (video) video.style.display = 'none';
+                question.style.display = 'block';
+                preview.getElementById('questionText').textContent =
+                    document.getElementById('trescPytania').value || 'Tresc pytania';
+                ['A', 'B', 'C', 'D'].forEach((letter) => {
+                    const input = document.getElementById('odp' + letter);
+                    const answer = preview.getElementById('answer' + letter);
+                    if (input && answer) {
+                        answer.textContent = letter + '. ' + (input.value || 'Odpowiedz');
+                        answer.classList.remove('answer', 'correctAnswer', 'wrongAnswer');
+                        if (!pokazujOdpowiedz) {
+                            answer.classList.add('answer');
+                        } else if (document.getElementById('poprawnaOdp').value === 'odp' + letter) {
+                            answer.classList.add('correctAnswer');
+                        } else {
+                            answer.classList.add('wrongAnswer');
+                        }
+                    }
+                });
+            } else {
+                question.style.display = 'none';
+                if (image) image.style.display = type === 'zdjecie' ? 'block' : 'none';
+                if (video) video.style.display = type === 'wideo' ? 'block' : 'none';
+
+                const file = document.getElementById('plik').files[0];
+                if (type === 'zdjecie' && file && image) {
+                    video.pause();
+                    const reader = new FileReader();
+                    reader.addEventListener('load', () => {
+                        image.src = reader.result;
+                    });
+                    reader.addEventListener('error', () => {
+                        image.removeAttribute('src');
+                    });
+                    reader.readAsDataURL(file);
+                }
+                if (type === 'wideo' && file && video) {
+                    if (previewVideoUrl) {
+                        URL.revokeObjectURL(previewVideoUrl);
+                    }
+                    previewVideoUrl = URL.createObjectURL(file);
+                    const source = video.querySelector('source');
+                    if (source) {
+                        source.src = previewVideoUrl;
+                        source.type = file.type || 'video/mp4';
+                    } else {
+                        video.src = previewVideoUrl;
+                    }
+                    video.loop = true;
+                    video.muted = false;
+                    video.volume = 1;
+                    video.load();
+                    const playPromise = video.play();
+                    if (playPromise) {
+                        playPromise.catch((error) => {
+                            console.warn('Podglad wideo nie uruchomil odtwarzania automatycznie:', error);
+                        });
+                    }
+                }
+
+            }
+        }
+
+        function przelaczTrybPytan() {
+            pokazujOdpowiedz = !pokazujOdpowiedz;
+            trybPytan.textContent = pokazujOdpowiedz
+                ? 'Pokaż normalne odpowiedzi'
+                : 'Pokaż poprawną odpowiedź';
+            updatePreview();
+        }
+
+        document.getElementById('rodzaj').addEventListener('change', () => {
+            updateFormFields();
+            updatePreview();
+        });
+        document.querySelectorAll('#formularz input, #formularz select').forEach((field) => {
+            field.addEventListener('input', updatePreview);
+            field.addEventListener('change', updatePreview);
+        });
+        previewFrame.addEventListener('load', updatePreview);
+        updateFormFields();
+        zmienWidok('dodajNewsa');
+    </script>
+</body>
+</html>
