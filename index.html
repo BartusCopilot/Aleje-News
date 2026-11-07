@@ -43,7 +43,7 @@
         </h2>
         <h2 id="hours">12:00</h2>
     </div>
-    <img src="visuals/logo.jpg" id="logo">
+    <img src="visuals/obraz.png" id="logo">
     <div id="countdown" aria-hidden="true">
         <svg class="countdown-ring" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
             <circle class="ring-bg" cx="50" cy="50" r="45" fill="none" stroke-width="8" />
@@ -55,6 +55,8 @@
     </div>
 
     <script>
+        const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+
         let lastId = 0;
         let hideTimer = null;
         let nextTimer = null;
@@ -134,8 +136,10 @@
             const mm = String(now.getMinutes()).padStart(2, '0');
             el.textContent = hh + ':' + mm;
         }
-        updateClock();
-        setInterval(updateClock, 1000);
+        if (!isPreview) {
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
 
         function hideNewsElements() {
             document.getElementById('textContent').style.display = 'none';
@@ -296,21 +300,12 @@
             }
         }
 
-        function positionWeather() {
-            const textContent = document.getElementById('textContent');
-            const weather = document.getElementById('weatherWidget');
-            if (!textContent || !weather) return;
-            const rect = textContent.getBoundingClientRect();
-            weather.style.bottom = (window.innerHeight - rect.top + 10) + 'px';
+        if (!isPreview) {
+            requestAnimationFrame(() => {
+                checkTitleScroll();
+                checkSubtitleScroll();
+            });
         }
-
-        positionWeather();
-
-        window.addEventListener('resize', () => {
-            positionWeather();
-            checkTitleScroll();
-            checkSubtitleScroll();
-        });
 
         async function loadWeatherFirst() {
             try {
@@ -343,11 +338,14 @@
             }
         }
 
-        setInterval(loadWeatherFirst, 300000);
-
-        hideNewsElements();
-        loadWeatherFirst();
-        loadNews();
+        if (!isPreview) {
+            setInterval(loadWeatherFirst, 300000);
+            hideNewsElements();
+            loadWeatherFirst();
+            loadNews();
+        } else {
+            document.getElementById('weatherWidget').classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
