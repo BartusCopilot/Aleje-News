@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Paź 31, 2026 at 10:07 AM
+-- Generation Time: Lis 09, 2026 at 07:26 PM
 -- Wersja serwera: 10.4.32-MariaDB
--- Wersja PHP: 8.2.12
+-- Wersja PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -41,20 +41,36 @@ CREATE TABLE `news` (
 --
 
 INSERT INTO `news` (`id`, `plik`, `tytul`, `opis`, `czas_trwania`, `rodzaj`) VALUES
-(1, 'pomnik.jpg', '93. rocznica odsłonięcia pomnika Henryka Sienkiewicza', '28 maja br. minęła 93. rocznica odsłonięcia pomnika Henryka Sienkiewicza w Łukowie – wybitnego pisarza, laureata Nagrody Nobla oraz patrona naszej szkoły.', 10, 'zdjecie'),
-(2, '', '', '', 10, 'pytanie_testowe'),
-(3, 'konkursHistoriaZiemiLukowskiej.jpg', 'Konkurs „Historia Ziemi Łukowskiej”', '23.04 o godzinie 10.00 odbył się szkolny etap Konkursu „Historia Ziemi Łukowskiej”. Organizatorem konkursu jest Młodzieżowa Rada Powiatu Łukowskiego', 10, 'zdjecie'),
-(4, '', '', '', 10, 'pytanie_testowe'),
-(5, '3majaAkademia.jpg', 'Akademia z okazji Święta Konstytucji 3 Maja', '30 kwietnia w naszej szkole odbyła się uroczysta akademia z okazji 235. rocznicy uchwalenia Konstytucji 3 Maja', 10, 'zdjecie'),
+(1, '1029b.jpg', '11 Listopada: Dzień, w którym Polska wrócila na mapę!', 'Upamiętnia odzyskanie przez Polskę niepodległości w 1918 roku, po 123 latach zaborów. Tego dnia – wraz z zakończeniem I wojny światowej – Polska powróciła na mapę świata, a Józef Piłsudski przejął władzę nad odradzającym się państwem. Świętujemy go, wywieszając biało-czerwone flagi i biorąc udział w uroczystościach.', 20, 'zdjecie'),
+(2, '', '', '', 15, 'pytanie_testowe'),
+(3, 'dp4.jpg', 'Diecezjalna Pielgrzymka Maturzystów', '21 października uczniowie klas 5Tia i 5Tel, wraz z wychowawcami: p. Beatą Kuczyńską, p. Ingą Bartosiewicz, p. Wiolettą Ponikowską oraz siostrą Małgorzatą Prokopiuk, uczestniczyli w Diecezjalnej Pielgrzymce Maturzystów do Sanktuarium Matki Boskiej Nieustającej Pomocy w Radzyniu Podlaskim.', 15, 'zdjecie'),
+(4, '', '', '', 15, 'pytanie_testowe'),
+(5, 'zdjecie-1-1024x684.jpg', 'Kolejny sukces Mikołaja Lemiecha', '30 października 2026 r. w Muzeum Sił Zbrojnych w Dęblinie odbył się II Dębliński Festiwal Poezji im. Marii Pawlikowskiej-Jasnorzewskiej, gromadząc 48 uczestników z całego regionu. Z dumą informujemy, że Mikołaj Lemiech z naszej szkoły zdobył II miejsce w kategorii poezji śpiewanej, zachwycając jury m.in. interpretacją „Elegii o chłopcu polskim”.', 15, 'zdjecie'),
 (6, '', '', '', 15, 'pytanie_testowe'),
-(7, 'konkursMotoryzacyjny.jpg', 'Konkurs motoryzacyjny', 'W dniu 23.04.2026 w naszej szkole odbyły się Eliminacje Powiatowe Turnieju „Bezpieczeństwo w Ruchu Drogowym”.', 10, 'zdjecie'),
-(8, '', '', '', 18, 'pytanie_testowe'),
-(9, 'kuzniaTalentow.jpg', 'Nasi Stypendyści Lubelskiej Kuźni Talentów', 'W trakcie gali nasi stypendyści: Julia Rola kl. 5Te, Kacper Rola kl. 5Tp, Artem Prykhoda kl. 4Tp, Jakub Pietrzak kl. 4Tel i Mikołaj Domański kl. 3Tp odebrali dyplomy uznania', 10, 'zdjecie'),
-(10, '', '', '', 10, 'pytanie_testowe'),
-(11, 'rajd3maj.jpg', 'Rajd 3-Majowy', '28 kwietnia odbył się IX Pieszy Rajd 3-Majowy Szkół Ponadpodstawowych Powiatu Łukowskiego. Naszą szkołę reprezentowali uczniowie klasy 2Tps', 10, 'zdjecie'),
-(12, 'zakonczenie5klas.jpg', 'Zakończenie roku szkolnego klas 5 technikum', 'Są takie chwile w szkole, których nie da się powtórzyć. „Nic dwa razy się nie zdarza…” - jak napisała Wisława Szymborska. Tak było w piątek, 24 kwietnia.', 10, 'zdjecie'),
-(13, 'wizytaPalac.jpg', 'Wizyta w pałacu króla Jana III w Wilanowie', 'Uczniowie klas pierwszych o profilu elektryk, informatyk i mechatronik we wtorek, 9 czerwca 2026 roku, odwiedzili Muzeum Króla Jana III w Wilanowie.', 10, 'zdjecie'),
-(14, 'hazardNieDajSie.jpg', 'Hazard? Nie daj się wciągnąć!', 'Dnia 29 maja uczniowie klasy 4Tia, 2Tps, 2Wb wzięli udział w ogólnopolskiej akcji edukacyjnej zorganizowanej przez Krajową Administrację Skarbową pod honorowym patronatem Ministerstwa Edukacji.', 10, 'zdjecie');
+(7, 'IMG20260915121506-1.jpg', 'Uczniowie naszej szkoły wzięli udział w kampanii „BohaterON”!', '15 września br. klasy 5Tia, 3Km oraz uczniowie z 4Th i 2Km włączyli się w projekt „BohaterON w Twojej Szkole”. Tegoroczna edycja przybliżyła młodzieży historię Haliny Rogozińskiej „Małej” – łączniczki z Powstania Warszawskiego.', 15, 'zdjecie'),
+(8, '', '', '', 15, 'pytanie_testowe'),
+(9, '1029b_1794245133.jpg', '11 Listopada: Dzień, w którym Polska wrócila na mapę!', 'Upamiętnia odzyskanie przez Polskę niepodległości w 1918 roku, po 123 latach zaborów. Tego dnia – wraz z zakończeniem I wojny światowej – Polska powróciła na mapę świata, a Józef Piłsudski przejął władzę nad odradzającym się państwem. Świętujemy go, wywieszając biało-czerwone flagi i biorąc udział w uroczystościach.', 20, 'zdjecie'),
+(10, '', '', '', 15, 'pytanie_testowe'),
+(11, 'IMG_7521-1-1024x969.jpeg', 'Warsztaty profilaktyczne dla uczniów', 'W dniach 1 i 8 października 2026 r. uczniowie licznych klas naszej szkoły wzięli udział w warsztatach prowadzonych przez specjalistki z SOPRiIK w Łukowie.', 15, 'zdjecie'),
+(12, '', '', '', 15, 'pytanie_testowe'),
+(13, 'Zrzut-ekranu-2026-10-10-155333.png', 'Zespół Szkół Nr 1 szkołą partnerską SCWEW w Łukowie!', 'Nasza szkoła nawiązała współpracę ze Specjalistycznym Centrum Wspierającym Edukację Włączającą (SCWEW) w Łukowie. Dzięki temu zyskujemy specjalistyczne wsparcie i nowe możliwości, by jeszcze lepiej odpowiadać na potrzeby uczniów i tworzyć przestrzeń do rozwoju dla każdego z nich.', 20, 'zdjecie'),
+(14, '', '', '', 15, 'pytanie_testowe'),
+(15, '1029b_1794245413.jpg', '11 Listopada: Dzień, w którym Polska wrócila na mapę!', 'Upamiętnia odzyskanie przez Polskę niepodległości w 1918 roku, po 123 latach zaborów. Tego dnia – wraz z zakończeniem I wojny światowej – Polska powróciła na mapę świata, a Józef Piłsudski przejął władzę nad odradzającym się państwem. Świętujemy go, wywieszając biało-czerwone flagi i biorąc udział w uroczystościach.', 20, 'zdjecie'),
+(16, '', '', '', 15, 'pytanie_testowe'),
+(17, 'logo_echo-1024x683.jpg', 'Konkurs Literacki „Echo łukowskich lasów - Ksiądz Generał Stanisław Brzóska - niezłomny obrońca wolności.\"', 'Zapraszamy do udziału w konkursie literackim organizowanym przez posła do PE Mariusza Kamińskiego, Starostę Łukowskiego Dariusza Szustka oraz Klub Gazety Polskiej Łuków. Inicjatywa ma na celu promowanie postaw patriotycznych, piękna języka ojczystego oraz odkrywanie młodych talentów.', 20, 'zdjecie'),
+(18, '', '', '', 15, 'pytanie_testowe'),
+(19, '29.10.2026-BCU-DLA-SZKOL-warsztaty-1.jpg', 'BCU DLA SZKÓŁ – Technologie, praktyka, przemysł', '29 października 2026 r. w łukowskim BCU odbyły się warsztaty dla 34 nauczycieli i doradców zawodowych z 24 szkół podstawowych. Spotkanie poświęcono łączeniu nowoczesnych technologii przemysłowych z edukacją i lepszemu doradztwu zawodowemu dla młodzieży.', 15, 'zdjecie'),
+(20, '', '', '', 15, 'pytanie_testowe'),
+(21, '1029b_1794245755.jpg', '11 Listopada: Dzień, w którym Polska wrócila na mapę!', 'Upamiętnia odzyskanie przez Polskę niepodległości w 1918 roku, po 123 latach zaborów. Tego dnia – wraz z zakończeniem I wojny światowej – Polska powróciła na mapę świata, a Józef Piłsudski przejął władzę nad odradzającym się państwem. Świętujemy go, wywieszając biało-czerwone flagi i biorąc udział w uroczystościach.', 20, 'zdjecie'),
+(22, '', '', '', 15, 'pytanie_testowe'),
+(23, '4.-Podziel-sie-wspomnieniem-z-ALEJ.jpg', '100 LAT - 100 HISTORII, PODZIEL SIĘ WSPOMNIENIEM Z ALEJ!', 'W 2027 roku „Aleje” będą obchodzić jubileusz 100-lecia istnienia. Z tej okazji zapraszamy absolwentów, nauczycieli, pracowników oraz ich rodziny do wspólnego tworzenia wyjątkowej kolekcji wspomnień i pamiątek o historii naszej szkoły.', 20, 'zdjecie'),
+(24, '', '', '', 15, 'pytanie_testowe'),
+(25, 'att.b1O6q2nvwlzVoXoPbHBIz1BrP6JlH-hhefbnGNsAPDk-852x1024.jpg', 'Tydzień Uczniowskiej Supermocy - Nasze drzewo supermocy', 'W naszej szkole zrealizowaliśmy ogólnopolski projekt „Tydzień Uczniowskiej Supermocy”, którego celem jest odkrywanie mocnych stron uczniów, wzmacnianie poczucia własnej wartości oraz budowanie pozytywnego obrazu siebie.', 15, 'zdjecie'),
+(26, '', '', '', 15, 'pytanie_testowe'),
+(27, '1029b_1794245935.jpg', '11 Listopada: Dzień, w którym Polska wrócila na mapę!', 'Upamiętnia odzyskanie przez Polskę niepodległości w 1918 roku, po 123 latach zaborów. Tego dnia – wraz z zakończeniem I wojny światowej – Polska powróciła na mapę świata, a Józef Piłsudski przejął władzę nad odradzającym się państwem. Świętujemy go, wywieszając biało-czerwone flagi i biorąc udział w uroczystościach.', 20, 'zdjecie'),
+(28, '', '', '', 15, 'pytanie_testowe'),
+(29, 'IMG20260928120549-1024x578.jpg', 'VII Ogólnopolski Tydzień Szczęścia w Szkole', 'W dniach 28 września – 4 października 2026 r. w naszej szkole odbył się VII Ogólnopolski Tydzień Szczęścia w Szkole pod hasłem „W dialogu z przyszłością”. Każdy dzień przyniósł inne wyzwania, zadania i inspiracje, które promowały dobrostan, dbanie o zdrowie psychiczne oraz refleksję nad przyszłością wśród całej społeczności szkolnej.', 20, 'zdjecie'),
+(30, '', '', '', 15, 'pytanie_testowe');
 
 -- --------------------------------------------------------
 
@@ -78,11 +94,21 @@ CREATE TABLE `pytania_testowe` (
 --
 
 INSERT INTO `pytania_testowe` (`id`, `news_id`, `tresc_pytania`, `odp_a`, `odp_b`, `odp_c`, `odp_d`, `poprawna_odp`) VALUES
-(2, 2, 'Ile orzechow laskowych chomik miesci do pyszczka?', '12-15 Sztuk', '2-5 Sztuk', '5-12 Sztuk', 'Ponad 16', 'A'),
-(3, 4, 'Gdzie raki zimuja?', 'Hiszpania', 'Atlantyk', 'Dół jeziora', 'Tajlandia', 'C'),
-(5, 6, 'Jak daleko potrafi wystrzelić swój język kameleon, aby złapać owada?', 'Na długość równą swojemu ciału', 'Na długość 2 razy większą niż całe jego ciało', 'Na maksymalnie 10 centymetrów', 'Na 5 metrów', 'B'),
-(6, 8, 'Ile żołądków ma leniwiec i ile czasu zajmuje mu strawienie jednego posiłku (np. kilku liści)?', 'Ma 1 żołądek, trawi w 2 godziny', 'Ma 2 żołądki, trawi w 1 dzień', 'Ma 4-komorowy żołądek, trawi do 1 miesiąca', 'Ma 6 żołądków, trawi w 3 dni', 'C'),
-(7, 10, 'Ile litrów wody potrafi zmagazynować w swoim organizmie spragniony wielbłąd podczas jednego „tankowania”?', 'Około 60 litrów', 'Około 30 litrów', 'Ponad 250 litrów', 'Około 110–130 litrów', 'D');
+(1, 2, 'Kiedy Polska oficjalnie odzyskała niepodległość po 123 latach zaborów?', '3 maja 1791 r.', '15 sierpnia 1920 r.', '11 listopada 1918 r.', '28 czerwca 1919 r.', 'C'),
+(2, 4, 'Przez jakie miasto przepływa Wisła?', 'Wrocław', 'Poznań', 'Warszawa', 'Szczecin', 'C'),
+(3, 6, 'Który szczyt jest najwyższy w Polsce?', 'Śnieżka', 'Rysy', 'Babia Góra', 'Kasprowy Wierch', 'B'),
+(4, 8, 'Jaka jest stolica Australii?', 'Sydney', 'Melbourne', 'Canberra', 'Perth', 'C'),
+(5, 10, 'W którym roku Sejm RP ustanowił 11 listopada oficjalnym, państwowym Świętem Niepodległości?', '1918 r.', '1926 r.', '1937 r. (a przywrócono w 1989 r.)', '1945 r.', 'C'),
+(6, 12, 'Która wyspa jest największa na świecie?', 'Madagaskar', 'Grenlandia', 'Borneo', 'Islandia', 'B'),
+(7, 14, 'Jak nazywa się linia o szerokości geograficznej 0°?', 'Zwrotnik Raka', 'Południk zerowy', 'Równik', 'Koło podbiegunowe', 'C'),
+(8, 16, 'Ile wynosi pierwiastek ze 144?', '10', '11', '12', '14', 'C'),
+(9, 18, 'Jakie są rozwiązania równania x^2 - 5x + 6 = 0?', '1 i 6', '2 i 3', '–2 i –3', '0 i 6', 'B'),
+(10, 20, 'Ile wynosi 30% z 250?', '65', '70', '75', '80', 'C'),
+(11, 22, 'Ile wynosi suma kątów wewnętrznych trójkąta?', '90°', '180°', '270°', '360°', 'B'),
+(12, 24, 'Jaki jest kolejny wyraz ciągu: 4, 7, 10, 13, …?', '14', '15', '16', '17', 'C'),
+(13, 26, 'Kto napisał „Lalkę”?', 'Henryk Sienkiewicz', 'Bolesław Prus', 'Stefan Żeromski', 'Władysław Reymont', 'B'),
+(14, 28, 'Kto jest autorem „Pana Tadeusza”?', 'Juliusz Słowacki', 'Adam Mickiewicz', 'Zygmunt Krasiński', 'Aleksander Fredro', 'B'),
+(15, 30, 'Który gatunek reprezentuje „Dziady cz. III”?', 'Powieść', 'Epika', 'Dramat', 'Fraszka', 'C');
 
 --
 -- Indeksy dla zrzutów tabel
@@ -108,13 +134,13 @@ ALTER TABLE `pytania_testowe`
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `pytania_testowe`
 --
 ALTER TABLE `pytania_testowe`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
