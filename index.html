@@ -338,11 +338,31 @@
             }
         }
 
+        function skipToNextNews() {
+            if (hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+            }
+            if (nextTimer) {
+                clearTimeout(nextTimer);
+                nextTimer = null;
+            }
+            hideNewsElements();
+            loadNews();
+        }
+
         if (!isPreview) {
             setInterval(loadWeatherFirst, 300000);
             hideNewsElements();
             loadWeatherFirst();
             loadNews();
+            
+            document.addEventListener('keydown', (event) => {
+            if (!isPreview && event.key === 'ArrowRight') {
+                event.preventDefault();
+                skipToNextNews();
+            }
+        });
         } else {
             document.getElementById('weatherWidget').classList.remove('hidden');
         }

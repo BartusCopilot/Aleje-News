@@ -72,6 +72,75 @@
         let previewVideoUrl = null;
         let pokazujOdpowiedz = false;
 
+        function dodajNewsa() {
+            const rodzaj = document.getElementById('rodzaj').value;
+            const formularz = document.querySelector('#formularz > div[type="' +
+                (rodzaj === 'zdjecie' || rodzaj === 'wideo' ? 'media' : rodzaj) + '"]');
+            const czasTrwania = parseInt(formularz.querySelector('[name="czasTrwania"]').value, 10);
+            if (isNaN(czasTrwania) || czasTrwania <= 0) {
+                alert('Czas trwania musi być liczbą większą od zera.');
+                return;
+            }
+            const dane = new FormData();
+            dane.append('rodzaj', rodzaj);
+            dane.append('czasTrwania', czasTrwania);
+
+            if (rodzaj === 'zdjecie' || rodzaj === 'wideo') {
+                const tytul = formularz.querySelector('[name="tytul"]').value.trim();
+                const opis = formularz.querySelector('[name="opis"]').value.trim();
+                const plikInput = formularz.querySelector('[name="plik"]');
+                const plik = plikInput.files[0];
+
+                if (!tytul || !opis || !plik) {
+                    alert('Wszystkie pola muszą być wypełnione.');
+                    return;
+                }
+
+                dane.append('tytul', tytul);
+                dane.append('opis', opis);
+                dane.append('plik', plik);
+            } else if (rodzaj === 'pytanie_testowe') {
+                const trescPytania = formularz.querySelector('[name="trescPytania"]').value.trim();
+                const odpA = formularz.querySelector('[name="odpA"]').value.trim();
+                const odpB = formularz.querySelector('[name="odpB"]').value.trim();
+                const odpC = formularz.querySelector('[name="odpC"]').value.trim();
+                const odpD = formularz.querySelector('[name="odpD"]').value.trim();
+                const poprawnaOdp = formularz.querySelector('[name="poprawnaOdp"]').value;
+
+                if (!trescPytania || !odpA || !odpB || !odpC || !odpD) {
+                    alert('Wszystkie pola muszą być wypełnione.');
+                    return;
+                }
+
+                dane.append('trescPytania', trescPytania);
+                dane.append('odpA', odpA);
+                dane.append('odpB', odpB);
+                dane.append('odpC', odpC);
+                dane.append('odpD', odpD);
+                dane.append('poprawnaOdp', poprawnaOdp);
+            } else {
+                alert('Nieznany rodzaj newsa.');
+                return;
+            }
+            fetch('dodajNewsa.php', {
+                method: 'POST',
+                body: dane
+            }).then((odpowiedz) => odpowiedz.text()).then((tekst) => {
+                let wynik;
+                try {
+                    wynik = JSON.parse(tekst);
+                } catch (blad) {
+                    throw new Error('Serwer zwrócił nieprawidłową odpowiedź. Sprawdź limit rozmiaru pliku w PHP.');
+                }
+                if (!wynik.sukces) {
+                    throw new Error(wynik.komunikat || 'Nie udało się dodać newsa.');
+                }
+                alert(wynik.komunikat);
+            }).catch((blad) => {
+                alert('Błąd: ' + blad.message);
+            });
+        }
+
         function zmienWidok(widok) {
             document.getElementById('dodajNewsa').style.display = widok === 'dodajNewsa' ? '' : 'none';
             document.getElementById('baza').style.display = widok === 'baza' ? '' : 'none';
