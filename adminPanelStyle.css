@@ -71,21 +71,28 @@ button:focus-visible {
     transform: translateY(-1px);
 }
 
-#dodajNewsa,
-#baza {
+#obszarRoboczy {
     width: min(100%, 1500px);
     margin: 0 auto;
+    display: grid;
+    align-items: start;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(1rem, 2vw, 2rem);
 }
 
 #dodajNewsa {
-    display: grid;
-    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
-    gap: clamp(1rem, 2vw, 2rem);
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#obszarRoboczy.widok-bazy {
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
 }
 
 #formularz,
 #podglad,
 #baza {
+    width: 100%;
     padding: clamp(1rem, 2vw, 2rem);
     background: rgba(10, 37, 64, 0.9);
     border: 1px solid var(--border);
@@ -128,7 +135,12 @@ button:focus-visible {
 }
 
 #podglad {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
     min-height: 0;
+    position: sticky;
+    top: clamp(1rem, 3vw, 3rem);
 }
 
 #podglad::before {
@@ -158,14 +170,78 @@ button:focus-visible {
 }
 
 #baza {
+    grid-column: 1;
+    grid-row: 1;
     min-height: 300px;
 }
 
+#tabelaBaza {
+    overflow-x: auto;
+    border: 1px solid rgba(85, 184, 232, 0.25);
+    border-radius: 10px;
+}
+
+#tabelaBaza table {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: collapse;
+    color: var(--text);
+}
+
+#tabelaBaza th,
+#tabelaBaza td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(169, 194, 212, 0.16);
+}
+
+#tabelaBaza th {
+    color: var(--text);
+    background: rgba(18, 59, 99, 0.9);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+#tabelaBaza td {
+    color: var(--muted);
+    background: rgba(7, 27, 49, 0.45);
+}
+
+#tabelaBaza tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+#tabelaBaza tbody tr:hover td {
+    color: var(--text);
+    background: rgba(85, 184, 232, 0.1);
+}
+
+#tabelaBaza tbody .wiersz-newsa {
+    cursor: pointer;
+}
+
+#tabelaBaza tbody .wiersz-newsa:focus-visible td {
+    outline: 2px solid var(--cyan);
+    outline-offset: -2px;
+}
+
 @media (max-width: 900px) {
-    #dodajNewsa {
+    #obszarRoboczy {
         grid-template-columns: 1fr;
     }
 
+    #dodajNewsa,
+    #baza,
+    #podglad {
+        grid-column: 1;
+        grid-row: auto;
+    }
+
+    #podglad {
+        grid-row: 2;
+        position: static;
+    }
 }
 
 @media (max-width: 520px) {
