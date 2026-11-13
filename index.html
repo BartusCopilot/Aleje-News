@@ -338,6 +338,8 @@
                 let data = await response.json();
                 if (data && !data.error) {
                     if (newsHistory.some((news) => news.id === data.id)) {
+                        currentNewsIndex = 0;
+                        updateNews(newsHistory[currentNewsIndex]);
                         return;
                     }
                     lastId = data.id;
